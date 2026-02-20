@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodyChat</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-color: #bc0000;
+            --text-color: #ffffff;
+            --secondary-bg: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Шапка */
+        header {
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(to bottom, #3d0000, var(--bg-color));
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(188, 0, 0, 0.3);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        /* Область сообщений */
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .incoming {
+            background-color: var(--secondary-bg);
+            align-self: flex-start;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .outgoing {
+            background-color: var(--accent-color);
+            color: white;
+            align-self: flex-end;
+        }
+
+        /* Поле ввода */
+        .input-area {
+            padding: 15px;
+            background-color: var(--secondary-bg);
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #333;
+        }
+
+        input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #444;
+            border-radius: 20px;
+            padding: 10px 15px;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>BLOODY CHAT</h1>
+</header>
+
+<div id="chat-container">
+    <div class="message incoming">Добро пожаловать в BloodyChat. Твои секреты здесь в безопасности... или нет.</div>
+</div>
+
+<div class="input-area">
+    <input type="text" id="user-input" placeholder="Напиши что-нибудь...">
+    <button id="send-btn">></button>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const chatContainer = document.getElementById('chat-container');
+
+    // Сообщаем Telegram, что приложение готово
+    tg.expand();
+    tg.setHeaderColor('#1a0000');
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text === "") return;
+
+        // Создаем элемент сообщения пользователя
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message outgoing';
+        msgDiv.textContent = text;
+        chatContainer.appendChild(msgDiv);
+
+        // Очищаем вход
+        userInput.value = "";
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Пример отправки данных боту (если нужно)
+        // tg.sendData(text); 
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+
+</body>
+</html>
